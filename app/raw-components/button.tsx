@@ -1,13 +1,17 @@
-import React from 'react'
+
 
 const Button = (props: any) => {
     const { className,
-        type, text } = props;
+        type, text,
+        onclickBtn
+    } = props;
     return (
         <div>
             <button
                 className={className}
-                type={type}>
+                type={type}
+                onClick={onclickBtn}
+            >
                 {text}
             </button>
         </div>

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import { toast } from 'react-toastify'
 import Button from '~/raw-components/button'
 import Input from '~/raw-components/input'
 import Label from '~/raw-components/label'
