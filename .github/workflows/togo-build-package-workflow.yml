@@ -19,7 +19,7 @@ jobs:
           node-version: "22"
           
       - name: Install Dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
       - name: Type check for ts
         run: npm run typecheck
       - name: Build Package
