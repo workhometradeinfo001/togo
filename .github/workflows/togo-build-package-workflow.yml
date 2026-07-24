@@ -1,0 +1,26 @@
+name: togo-front-end
+
+on: 
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check code
+        uses: actions/checkout@v4
+        
+      - name: Setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          
+      - name: Install Dependencies
+        run: npm ci
+      - name: Type check for ts
+        run: npm run typecheck
+      - name: Build Package
+        run: npm run build
