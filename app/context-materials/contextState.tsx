@@ -4,10 +4,10 @@ import { toast } from 'react-toastify';
 
 const ContextState = ({ children }: any) => {
 
-    const [endpoints, setEndPoints] = useState({ 
-        acc_create: "reg/ac", 
-        login: "", 
-        forgot_pass: "" 
+    const [endpoints, setEndPoints] = useState({
+        acc_create: "reg/ac",
+        login: "",
+        forgot_pass: ""
     });
     const regex = {
         name: /^\p{L}+([\s'-]\p{L}+)*$/u,
@@ -33,34 +33,72 @@ const ContextState = ({ children }: any) => {
         }
     };
 
-    const handlePostMethod = async (obj: Object, e: Event, end_point: String,
+    const handlePostMethod = async (obj: Object, e: Event,
+        end_point: String,
+        toastMsgSuc: String,
+        toastMsgFail: String,
         optional: Function) => {
         e.preventDefault();
-        await fetch(`${host}/${end_point}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(obj)
-        }).then(res => {
-            if (res.ok) {
-                toast.success("Account create successful.");
-                if (optional) {
-                    optional();
+        try {
+            return await fetch(`${host}/${end_point}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(obj)
+            }).then(async res => {
+                if (res.ok || res.status === 302) {
+                    toast.success(toastMsgSuc);
+                    if (optional) {
+                        optional();
+                    }
+                    const contentType = res.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        const text = await res.text();
+                        return text ? JSON.parse(text) : {};
+                    } else {
+                        return res.status;
+                    }
+                } else {
+                    toast.error(toastMsgFail);
                 }
-            } else {
-                toast.error("Something wrong!!!");
-            }
-        })
-
+            })
+        } catch (error) {
+            console.log(error);
+            toast.error("Try again later")
+        }
     }
-
+    const handleGetMethodWithParam =
+        async (endPoint: string, email: string, msgFaild: string) => {
+            try {
+                return fetch(`${host}/${endPoint}?email=${email}`, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }).then(async res => {
+                    if (res.ok) {
+                        const data = await res.json();
+                        sessionStorage.removeItem("code");
+                        sessionStorage.setItem("code", data.code);
+                        return data;
+                    } else if (res.status === null) {
+                        toast.error(`${msgFaild}`)
+                    } else {
+                        toast.error(`${msgFaild}`);
+                    }
+                })
+            } catch (error) {
+                toast.error("Try again later")
+            }
+        }
     return (
         <TogoContext.Provider
-            value={{ 
-                handlePostMethod, endpoints, 
-                setEndPoints, regex, handleRegEx, 
-                }}>
+            value={{
+                handlePostMethod, endpoints,
+                setEndPoints, regex, handleRegEx,
+                handleGetMethodWithParam
+            }}>
             {children}
         </TogoContext.Provider>
     );

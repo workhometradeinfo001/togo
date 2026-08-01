@@ -14,6 +14,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // Optional: Import Bootstrap Icons if you want to use them
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useEffect } from "react";
+import ContextState from "./context-materials/contextState";
+import { LoadingBarContainer } from "react-top-loading-bar";
+import { Bounce, ToastContainer } from "react-toastify";
 
 
 export const links: Route.LinksFunction = () => [
@@ -30,7 +33,7 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  useEffect(()=>{
+  useEffect(() => {
     import("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, [])
   return (
@@ -45,13 +48,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          transition={Bounce}
+        />
       </body>
     </html>
   );
 }
 
 export default function App() {
-  return <Outlet />;
+  return <ContextState><LoadingBarContainer> <Outlet /> </LoadingBarContainer></ContextState>
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

@@ -235,6 +235,8 @@ const Signup = (props: any) => {
                             start();
                             handlePostMethod(obj_for_send, e,
                                 endpoints.acc_create,
+                                "Account create successfull.",
+                                "Faile to Account Creation!",
                                 resetInputFileds);
                             complete();
                         }}
