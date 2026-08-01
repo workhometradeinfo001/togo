@@ -11,33 +11,29 @@ import Paragraph from "~/raw-components/paragraph"
 const Signin = (props: any) => {
     const { classNameTopDiv } = props;
     const { handlePostMethod } = useContext(TogoContext);
-    const [inputFiled, setInputFiled] = useState({ email: "", password: ""});
+    const [inputFiled, setInputFiled] = useState({ email: "", password: "" });
     const [checkPointState, setCheckPointState] = useState(false);
-    const {start,complete} = useLoadingBar({
+    const { start, complete } = useLoadingBar({
         color: "red",
         height: 2
     });
-    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>, 
-        inputFiledName: string)=> {
-        try{
+    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>,
+        inputFiledName: string) => {
+        try {
             switch (inputFiledName) {
                 case 'email':
-                    setInputFiled({...inputFiled, email: e.target.value});
+                    setInputFiled({ ...inputFiled, email: e.target.value });
                     break;
                 case 'password':
-                    setInputFiled({...inputFiled, password: e.target.value});
+                    setInputFiled({ ...inputFiled, password: e.target.value });
                     break;
                 case 'check':
-                    if(!checkPointState){
-                        setCheckPointState(true);
-                    }else{
-                        setCheckPointState(false);
-                    }  
+                    setCheckPointState((prev) => !prev);
                     break;
                 default:
                     break;
             }
-        }catch{
+        } catch {
             toast.error("Try after later...");
         }
     }
@@ -51,10 +47,10 @@ const Signin = (props: any) => {
                 <div className="mb-3">
                     <Label htmlForTag="exampleEmail" className="form-label" text="Email Address" />
                     <Input id="exampleEmail" className="form-control"
-                        placeHolder="name@example.com" type="email" 
+                        placeHolder="name@example.com" type="email"
                         value={inputFiled.email}
-                        onChange={(e: ChangeEvent<HTMLInputElement>)=> handleOnChange(e, "email")}
-                        />
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange(e, "email")}
+                    />
                     <div className="form-text">We'll never share your email with anyone else.</div>
                 </div>
 
@@ -63,34 +59,39 @@ const Signin = (props: any) => {
                     <Input id="examplePassword" className="form-control"
                         placeHolder="********" type="password"
                         value={inputFiled.password}
-                        onChange={(e: ChangeEvent<HTMLInputElement>)=> handleOnChange(e, "password")}
-                        />
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange(e, "password")}
+                    />
                 </div>
 
                 <div className="mb-3 form-check">
                     <Input id="exampleCheck" className="form-check-input"
                         placeHolder="********" type="checkbox"
                         checked={checkPointState}
-                        onChange={(e: ChangeEvent<HTMLInputElement>)=> handleOnChange(e, "check")}
-                        />
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange(e, "check")}
+                    />
                     <Label htmlForTag="exampleCheck" className="form-check-label"
                         text="Logout after 1 weak" />
                 </div>
                 <Button type="submit" className={`btn btn-primary w-100
                     ${!checkPointState && "disabled"}
-                `} text="Login" 
-                    onclickBtn={(e: Event)=> 
-                        {
-                            start();
-                            handlePostMethod(loginObj, e, 
+                `} text="Login"
+                    onclickBtn={async (e: Event) => {
+                        e.preventDefault();
+                        start();
+                        try {
+                            await handlePostMethod(loginObj,
                                 "login",
                                 "Login successfull",
                                 "Faile to login"
                             );
-                            setInputFiled({email: "", password: ""});
+                            setInputFiled({ email: "", password: "" });
                             setCheckPointState(false);
+                        } catch (error) {
+                            console.log(error);
+                        } finally {
                             complete();
-                        }}
+                        }
+                    }}
                 />
             </form>
             <div className='d-flex flex-row'>

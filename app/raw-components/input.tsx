@@ -4,7 +4,7 @@ const Input = (props: any) => {
     const {
         placeHolder, id,
         type, className,
-        onChange, value
+        onChange, value, checked
     } = props;
     return (
         <div>
@@ -12,6 +12,7 @@ const Input = (props: any) => {
                 className={className}
                 id={id} placeholder={placeHolder} 
                 value={value}
+                checked={checked}
                 onChange={onChange}
                 />
         </div>

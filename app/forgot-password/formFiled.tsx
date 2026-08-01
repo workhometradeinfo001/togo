@@ -34,10 +34,9 @@ const FormFiled = ({
     const handleBtnOnClick = async (e: Event) => {
         e.preventDefault();
         const data = await handlePostMethod(
-            postObj,
-            e, "forgotPass/update_pass",
-            "Successfully Changed",
-            "Try later"
+            postObj, "forgotPass/update_pass",
+            "Verify Successfull",
+            "Verify Unsuccessfull"
         );
         console.log(data);
         if(data === 202){

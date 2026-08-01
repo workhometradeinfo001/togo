@@ -33,14 +33,13 @@ const ContextState = ({ children }: any) => {
         }
     };
 
-    const handlePostMethod = async (obj: Object, e: Event,
+    const handlePostMethod = async (obj: Object,
         end_point: String,
         toastMsgSuc: String,
         toastMsgFail: String,
         optional: Function) => {
-        e.preventDefault();
         try {
-            return await fetch(`${host}/${end_point}`, {
+            await fetch(`${host}/${end_point}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -59,6 +58,7 @@ const ContextState = ({ children }: any) => {
                     } else {
                         return res.status;
                     }
+
                 } else {
                     toast.error(toastMsgFail);
                 }
