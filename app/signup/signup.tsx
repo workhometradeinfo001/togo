@@ -231,14 +231,14 @@ const Signup = (props: any) => {
                         className={`btn btn-success w-100 
                             ${!isNowSubmitable && "disabled"}`}
                         type="submit" text="Signup"
-                        onclickBtn={(e: Event) => {
+                        onclickBtn={async (e: Event) => {
                             start();
-                            handlePostMethod(obj_for_send, e,
+                            const data = await handlePostMethod(obj_for_send,
                                 endpoints.acc_create,
                                 "Account create successfull.",
                                 "Faile to Account Creation!",
                                 resetInputFileds);
-                            complete();
+                            data ? complete() : complete();
                         }}
                     />
                 </div>

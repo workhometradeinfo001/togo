@@ -14,7 +14,7 @@ const ContextState = ({ children }: any) => {
         email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
     };
-    const host: string = "http://localhost:8081";
+    const host: string = import.meta.env.VITE_CLOUD_HOST;
 
     const handleRegEx = (field_name: String, inputData: any): Boolean | undefined => {
         switch (field_name) {
@@ -32,12 +32,12 @@ const ContextState = ({ children }: any) => {
                 break;
         }
     };
-
-    const handlePostMethod = async (obj: Object,
-        end_point: String,
-        toastMsgSuc: String,
-        toastMsgFail: String,
-        optional: Function) => {
+    const handlePostMethod = async (
+        obj: Record<string, any>,
+        end_point: string,
+        toastMsgSuc: string,
+        toastMsgFail: string,
+        optional: ()=> void) => {
         try {
             await fetch(`${host}/${end_point}`, {
                 method: "POST",
