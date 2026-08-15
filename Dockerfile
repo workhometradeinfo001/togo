@@ -1,22 +1,27 @@
-FROM node:24-alpine AS development-dependencies-env
-COPY . /app
+#Stage One
+FROM node:22-alpine AS builder
 WORKDIR /app
+
+#Copy Dependency
+COPY package*.json ./
 RUN npm ci
 
-FROM node:24-alpine AS production-dependencies-env
-COPY ./package.json package-lock.json /app/
-WORKDIR /app
-RUN npm ci --omit=dev
-
-FROM node:24-alpine AS build-env
-COPY . /app/
-COPY --from=development-dependencies-env /app/node_modules /app/node_modules
-WORKDIR /app
+#Copy Code
+COPY . .
 RUN npm run build
 
-FROM node:24-alpine
-COPY ./package.json package-lock.json /app/
-COPY --from=production-dependencies-env /app/node_modules /app/node_modules
-COPY --from=build-env /app/build /app/build
+#Stage Two
+FROM node:22-alpine AS runner
 WORKDIR /app
-CMD ["npm", "run", "start"]
+
+ENV NODE_ENV=production
+
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+COPY --from=builder /app/build ./build
+
+EXPOSE 5173
+
+CMD ["node", "build/server/index.js"]
+
