@@ -2,6 +2,10 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
+ARG VITE_CLOUD_HOST
+
+ENV VITE_CLOUD_HOST=$VITE_CLOUD_HOST
+
 #Copy Dependency
 COPY package*.json ./
 RUN npm ci

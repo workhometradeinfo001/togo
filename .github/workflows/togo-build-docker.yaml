@@ -20,6 +20,9 @@ jobs:
 
     - name: Build docker file
       run: docker build -t ${{ secrets.DOCKER_IMAGE_NAME }} .
-        
+
+    - name: Login into Azure
+      run: |
+      
             
         
