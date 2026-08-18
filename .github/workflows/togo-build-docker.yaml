@@ -73,3 +73,5 @@ jobs:
             --target-port 5173 \
             --ingress external \
             --env-vars VITE_CLOUD_HOST=${{ secrets.VITE_CLOUD_HOST }}
+
+      

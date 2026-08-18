@@ -27,5 +27,8 @@ COPY --from=builder /app/build ./build
 
 EXPOSE 5173
 
-CMD ["node", "build/server/index.js"]
+ENV PORT=5173
+ENV HOST=0.0.0.0
+
+CMD ["npm", "run", "start"]
 
