@@ -23,7 +23,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     // Handle your password reset logic here
     const data = await handleGetMethodWithParam(
-      "forgotPass", findingEmail.email,
+      "forgotPass/code-verify", findingEmail.email,
       "Wrong Email!"
     );
     if(data === undefined) {

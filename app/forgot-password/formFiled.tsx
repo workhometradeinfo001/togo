@@ -35,10 +35,9 @@ const FormFiled = ({
         e.preventDefault();
         const data = await handlePostMethod(
             postObj, "forgotPass/update_pass",
-            "Verify Successfull",
-            "Verify Unsuccessfull"
+            "Change Successfully",
+            "Change Unsuccessfull"
         );
-        console.log(data);
         if(data === 202){
             navigator("/");
         }
