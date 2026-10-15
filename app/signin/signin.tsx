@@ -44,15 +44,15 @@ const Signin = (props: any) => {
         switch (whichCaller) {
             case "google":
                 localStorage.setItem("oauth_endpoint", "oauth/token");
-                window.location.href = `${import.meta.env.VITE_CLOUD_AUTH_HOST}/oauth2/authorization/google`;
+                window.location.href = `${import.meta.env.VITE_LOCAL_AUTH_HOST}/oauth2/authorization/google`;
                 break;
             case "facebook":
                 localStorage.setItem("oauth_endpoint", "fb/api/token");
-                window.location.href = `${import.meta.env.VITE_CLOUD_AUTH_HOST}/oauth2/authorization/facebook`;
+                window.location.href = `${import.meta.env.VITE_LOCAL_AUTH_HOST}/oauth2/authorization/facebook`;
                 break;
             case "linkedin":
                 localStorage.setItem("oauth_endpoint", "linkedin/api/token");
-                window.location.href = `${import.meta.env.VITE_CLOUD_AUTH_HOST}/oauth2/authorization/linkedin`;
+                window.location.href = `${import.meta.env.VITE_LOCAL_AUTH_HOST}/oauth2/authorization/linkedin`;
                 break;
             default:
                 break;
