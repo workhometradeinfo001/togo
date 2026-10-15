@@ -15,6 +15,7 @@ const ContextState = ({ children }: any) => {
         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
     };
     const host: string = import.meta.env.VITE_CLOUD_HOST;
+    const auth_host: string = import.meta.env.VITE_CLOUD_AUTH_HOST;
 
     const handleRegEx = (field_name: String, inputData: any): Boolean | undefined => {
         switch (field_name) {
@@ -48,7 +49,6 @@ const ContextState = ({ children }: any) => {
                 },
                 body: JSON.stringify(obj)
             });
-
             if (res.ok || res.status === 302 || res.status === 202) {
                 toast.success(toastMsgSuc);
                 if (optional) optional();
@@ -68,7 +68,6 @@ const ContextState = ({ children }: any) => {
             return null;
         }
     };
-
     const handleGetMethodWithParam =
         async (endPoint: string, email: string, msgFaild: string) => {
             try {
@@ -93,12 +92,31 @@ const ContextState = ({ children }: any) => {
                 toast.error("Try again later")
             }
         }
+    const handleGetMethAuth = async (endPoint: string, 
+            msgForSuccess: string, msgForFailed: string,
+        )=> {
+            fetch(`${auth_host}/${endPoint}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                },
+                credentials: "include"
+            }).then(async res => {
+                if(!res.ok){
+                    toast.error(msgForFailed);
+                    console.log(res);
+                }else{
+                    toast.success(msgForSuccess);
+                    console.log(res);
+                }
+            })
+        }
     return (
         <TogoContext.Provider
             value={{
                 handlePostMethod, endpoints,
                 setEndPoints, regex, handleRegEx,
-                handleGetMethodWithParam
+                handleGetMethodWithParam, handleGetMethAuth
             }}>
             {children}
         </TogoContext.Provider>

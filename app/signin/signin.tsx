@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useEffectEvent, useState, type ChangeEvent } from 'react'
-import { Link } from 'react-router'
+import React, { useContext, useEffect, useState, type ChangeEvent } from 'react'
+import { Link, useSearchParams } from 'react-router'
 import { toast } from 'react-toastify'
 import { useLoadingBar } from 'react-top-loading-bar'
 import TogoContext from '~/context-materials/togoContext'
@@ -10,7 +10,8 @@ import Paragraph from "~/raw-components/paragraph"
 
 const Signin = (props: any) => {
     const { classNameTopDiv } = props;
-    const { handlePostMethod } = useContext(TogoContext);
+    const { handlePostMethod, handleGetMethAuth } = useContext(TogoContext);
+    const [searchParam] = useSearchParams();
     const [inputFiled, setInputFiled] = useState({ email: "", password: "" });
     const [checkPointState, setCheckPointState] = useState(false);
     const { start, complete } = useLoadingBar({
@@ -37,10 +38,37 @@ const Signin = (props: any) => {
             toast.error("Try after later...");
         }
     }
+    const oauthLoging = (e: React.MouseEvent, whichCaller: string) => {
+        e.preventDefault();
+        e.isPropagationStopped();
+        switch (whichCaller) {
+            case "google":
+                localStorage.setItem("oauth_endpoint", "oauth/token");
+                window.location.href = `${import.meta.env.VITE_CLOUD_AUTH_HOST}/oauth2/authorization/google`;
+                break;
+            case "facebook":
+                localStorage.setItem("oauth_endpoint", "fb/api/token");
+                window.location.href = `${import.meta.env.VITE_CLOUD_AUTH_HOST}/oauth2/authorization/facebook`;
+                break;
+            case "linkedin":
+                localStorage.setItem("oauth_endpoint", "linkedin/api/token");
+                window.location.href = `${import.meta.env.VITE_CLOUD_AUTH_HOST}/oauth2/authorization/linkedin`;
+                break;
+            default:
+                break;
+        }
+    }
     const loginObj = {
         email: inputFiled.email,
         password: inputFiled.password
     }
+    useEffect(() => {
+        if (searchParam.get("auth") === "callback") {
+            handleGetMethAuth(localStorage.getItem("oauth_endpoint"),
+                "Login Succesful", "Login Failed"
+            );
+        }
+    }, [searchParam]);
     return (
         <div className={classNameTopDiv}>
             <form>
@@ -73,7 +101,7 @@ const Signin = (props: any) => {
                         text="Logout after 1 weak" />
                 </div>
                 <Button type="submit" className={`btn btn-primary w-100
-                    ${!checkPointState && "disabled"}
+                    ${(!checkPointState || inputFiled.email === "" || inputFiled.password === "") && "disabled"}
                 `} text="Login"
                     onclickBtn={async (e: Event) => {
                         e.preventDefault();
@@ -94,6 +122,17 @@ const Signin = (props: any) => {
                     }}
                 />
             </form>
+            <div className='d-flex flex-row justify-content-between row mt-4'>
+                <div className='col-4 text-center'>
+                    <i onClick={(e) => oauthLoging(e, "google")} className="fa-brands fa-google fa-xl cursor-pointer"></i>
+                </div>
+                <div className='col-4 text-center'>
+                    <i onClick={(e) => oauthLoging(e, "facebook")} className="fa-brands fa-facebook fa-xl cursor-pointer"></i>
+                </div>
+                <div className='col-4 text-center'>
+                    <i onClick={(e) => oauthLoging(e, "linkedin")} className="fa-brands fa-square-linkedin fa-xl cursor-pointer"></i>
+                </div>
+            </div>
             <div className='d-flex flex-row'>
                 <Paragraph
                     className="mt-4 text-secondary fs-6"

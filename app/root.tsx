@@ -19,6 +19,7 @@ import { LoadingBarContainer } from "react-top-loading-bar";
 import { Bounce, ToastContainer } from "react-toastify";
 
 
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -43,6 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <script src="https://kit.fontawesome.com/18769700a4.js" crossOrigin="anonymous"></script>
       </head>
       <body>
         {children}
@@ -67,8 +69,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <ContextState><LoadingBarContainer> <Outlet /> </LoadingBarContainer></ContextState>
-}
+  return( 
+   <ContextState>
+      <LoadingBarContainer> <Outlet /> </LoadingBarContainer>
+    </ContextState>
+)}
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
