@@ -101,7 +101,7 @@ const ContextState = ({ children }: any) => {
                     "Accept": "application/json"
                 },
                 credentials: "include"
-            }).then(async res => {
+            }).then(res => {
                 if(!res.ok){
                     toast.error(msgForFailed);
                     console.log(res);
