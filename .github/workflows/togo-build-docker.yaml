@@ -45,6 +45,7 @@ jobs:
         run: |
           docker build \
             --build-arg VITE_CLOUD_HOST=${{ secrets.VITE_CLOUD_HOST }} \
+            --build-arg VITE_CLOUD_AUTH_HOST=${{secrets.VITE_CLOUD_AUTH_HOST}}
             -t $FULL_IMAGE_NAME .
           docker push $FULL_IMAGE_NAME
 
