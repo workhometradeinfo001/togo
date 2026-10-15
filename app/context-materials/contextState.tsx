@@ -15,7 +15,7 @@ const ContextState = ({ children }: any) => {
         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
     };
     const host: string = import.meta.env.VITE_CLOUD_HOST;
-    const auth_host: string = import.meta.env.VITE_CLOUD_AUTH_HOST;
+    const auth_host: string = import.meta.env.VITE_LOCAL_AUTH_HOST;
 
     const handleRegEx = (field_name: String, inputData: any): Boolean | undefined => {
         switch (field_name) {
