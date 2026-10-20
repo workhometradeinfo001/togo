@@ -51,7 +51,9 @@ const ContextState = ({ children }: any) => {
             });
             if (res.ok || res.status === 302 || res.status === 202) {
                 toast.success(toastMsgSuc);
-                if (optional) optional();
+                if (optional) {
+                    optional();
+                };
 
                 const contentType = res.headers.get("content-type");
                 if (contentType && contentType.includes("application/json")) {
@@ -92,25 +94,27 @@ const ContextState = ({ children }: any) => {
                 toast.error("Try again later")
             }
         }
-    const handleGetMethAuth = async (endPoint: string, 
-            msgForSuccess: string, msgForFailed: string,
-        )=> {
-            fetch(`${auth_host}/${endPoint}`, {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json"
-                },
-                credentials: "include"
-            }).then(res => {
-                if(!res.ok){
-                    toast.error(msgForFailed);
-                    console.log(res);
-                }else{
-                    toast.success(msgForSuccess);
-                    console.log(res);
-                }
-            })
-        }
+    const handleGetMethAuth = async (endPoint: string,
+        msgForSuccess: string, msgForFailed: string,
+    ) => {
+        fetch(`${auth_host}/${endPoint}`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            },
+            credentials: "include"
+        }).then(async res => {
+            if (!res.ok) {
+                toast.error(msgForFailed);
+                console.log(res);
+            } else {
+                const data = await res.text();
+                toast.success(msgForSuccess);
+                console.log(res);
+                console.log(data);
+            }
+        })
+    }
     return (
         <TogoContext.Provider
             value={{

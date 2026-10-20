@@ -14,6 +14,7 @@ const Signin = (props: any) => {
     const [searchParam] = useSearchParams();
     const [inputFiled, setInputFiled] = useState({ email: "", password: "" });
     const [checkPointState, setCheckPointState] = useState(false);
+    const [mail, setMail] = useState<String | null>(null);
     const { start, complete } = useLoadingBar({
         color: "red",
         height: 2
@@ -62,6 +63,9 @@ const Signin = (props: any) => {
         email: inputFiled.email,
         password: inputFiled.password
     }
+    const afterSuccessfulLogin = async ()=> {
+        await fetch(`${import.meta.env.VITE_CLOUD_AUTH_HOST}/jwt/token?email=${mail}`);
+    }
     useEffect(() => {
         if (searchParam.get("auth") === "callback") {
             handleGetMethAuth(localStorage.getItem("oauth_endpoint"),
@@ -69,6 +73,12 @@ const Signin = (props: any) => {
             );
         }
     }, [searchParam]);
+    useEffect(()=> {
+        const mailStore = localStorage.getItem("email");
+        if(mailStore){
+            setMail(mailStore);
+        }
+    }, []);
     return (
         <div className={classNameTopDiv}>
             <form>
@@ -105,13 +115,17 @@ const Signin = (props: any) => {
                 `} text="Login"
                     onclickBtn={async (e: Event) => {
                         e.preventDefault();
+                        mail ? localStorage.removeItem("email"): mail;
                         start();
                         try {
                             await handlePostMethod(loginObj,
                                 "login",
                                 "Login successfull",
-                                "Faile to login"
+                                "Faile to login",
+                                afterSuccessfulLogin
                             );
+
+                            localStorage.setItem("email", inputFiled.email);
                             setInputFiled({ email: "", password: "" });
                             setCheckPointState(false);
                         } catch (error) {
