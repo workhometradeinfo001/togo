@@ -110,8 +110,7 @@ const ContextState = ({ children }: any) => {
             } else {
                 const data = await res.text();
                 toast.success(msgForSuccess);
-                console.log(res);
-                console.log(data);
+                return data;
             }
         })
     }

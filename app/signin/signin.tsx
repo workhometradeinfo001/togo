@@ -68,9 +68,11 @@ const Signin = (props: any) => {
     }
     useEffect(() => {
         if (searchParam.get("auth") === "callback") {
-            handleGetMethAuth(localStorage.getItem("oauth_endpoint"),
+            const data = handleGetMethAuth(localStorage.getItem("oauth_endpoint"),
                 "Login Succesful", "Login Failed"
             );
+            mail && localStorage.removeItem("email");
+            localStorage.setItem("email", data);
         }
     }, [searchParam]);
     useEffect(()=> {
