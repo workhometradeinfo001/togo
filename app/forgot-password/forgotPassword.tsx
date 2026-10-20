@@ -7,10 +7,15 @@ import Button from '~/raw-components/button';
 import TogoContext from '~/context-materials/togoContext';
 import Input from '~/raw-components/input';
 import { toast } from 'react-toastify';
+import { useLoadingBar } from 'react-top-loading-bar';
 
 const ForgotPassword = () => {
   const { handleGetMethodWithParam } = useContext(TogoContext);
   const [email, setEmail] = useState('');
+  const {start, complete} = useLoadingBar({
+    color: "red",
+    height: 2
+  })
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isDoneByCode, setDoneByCode] = useState(false);
   const [userCode, setUserCode] = useState("");
@@ -21,17 +26,24 @@ const ForgotPassword = () => {
   }), [email]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle your password reset logic here
-    const data = await handleGetMethodWithParam(
-      "forgotPass/code-verify", findingEmail.email,
-      "Wrong Email!"
-    );
-    if(data === undefined) {
-      toast.error("kdkdk");
+    start();
+    try {
+      const data = await handleGetMethodWithParam(
+        "forgotPass/code-verify", findingEmail.email,
+        "Wrong Email!"
+      );
+      if (data === undefined) {
+        toast.error("Something wrong!");
+      }
+      if (data.Http === 302) {
+        setIsSubmitted(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }finally{
+      complete();
     }
-    if (data.Http === 302) {
-      setIsSubmitted(true);
-    }
+
   };
   const obj = [
     {

@@ -156,7 +156,7 @@ const Signin = (props: any) => {
                 <Paragraph
                     className="mt-4 text-secondary fs-6"
                     text="Forgot password: " />
-                {<Link to={"/forgetpassword"} className='mt-4 ms-2'>Click here</Link>}
+                {<Link to={"/forgetpassword"} onClick={()=> {start(), complete()}} className='mt-4 ms-2'>Click here</Link>}
             </div>
 
         </div>
