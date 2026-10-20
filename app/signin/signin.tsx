@@ -63,21 +63,24 @@ const Signin = (props: any) => {
         email: inputFiled.email,
         password: inputFiled.password
     }
-    const afterSuccessfulLogin = async ()=> {
+    const afterSuccessfulLogin = async () => {
         await fetch(`${import.meta.env.VITE_CLOUD_AUTH_HOST}/jwt/token?email=${mail}`);
     }
     useEffect(() => {
-        if (searchParam.get("auth") === "callback") {
-            const data = handleGetMethAuth(localStorage.getItem("oauth_endpoint"),
-                "Login Succesful", "Login Failed"
-            );
-            mail && localStorage.removeItem("email");
-            localStorage.setItem("email", data);
+        const processOauthCallBack = async () => {
+            if (searchParam.get("auth") === "callback") {
+                const data = await handleGetMethAuth(localStorage.getItem("oauth_endpoint"),
+                    "Login Succesful", "Login Failed"
+                );
+                mail && localStorage.removeItem("email");
+                localStorage.setItem("email", data);
+            }
         }
+        processOauthCallBack();
     }, [searchParam]);
-    useEffect(()=> {
+    useEffect(() => {
         const mailStore = localStorage.getItem("email");
-        if(mailStore){
+        if (mailStore) {
             setMail(mailStore);
         }
     }, []);
@@ -117,7 +120,7 @@ const Signin = (props: any) => {
                 `} text="Login"
                     onclickBtn={async (e: Event) => {
                         e.preventDefault();
-                        mail ? localStorage.removeItem("email"): mail;
+                        mail ? localStorage.removeItem("email") : mail;
                         start();
                         try {
                             await handlePostMethod(loginObj,
