@@ -97,22 +97,21 @@ const ContextState = ({ children }: any) => {
     const handleGetMethAuth = async (endPoint: string,
         msgForSuccess: string, msgForFailed: string,
     ) => {
-        fetch(`${auth_host}/${endPoint}`, {
+        const res = await fetch(`${auth_host}/${endPoint}`, {
             method: "GET",
             headers: {
                 "Accept": "application/json"
             },
             credentials: "include"
-        }).then(async res => {
-            if (!res.ok) {
-                toast.error(msgForFailed);
-                console.log(res);
-            } else {
-                const data = await res.text();
-                toast.success(msgForSuccess);
-                return data;
-            }
         })
+        if (!res.ok) {
+            toast.error(msgForFailed);
+            return null;
+        }
+
+        const data = await res.text();
+        toast.success(msgForSuccess);
+        return data;
     }
     return (
         <TogoContext.Provider
