@@ -31,15 +31,13 @@ const Welcome = () => {
         credentials: "include",
         body: JSON.stringify({ email: mail })
       });
-      console.log(res);
       if (res.status == 202) {
-        setIsTokenValid(true);
+        window.location.href = dashboard;
+      } else {
         setIsLoading(false);
-        console.log("middle");
+        setIsTokenValid(false);
       }
       setIsLoading(false);
-      setIsTokenValid(false);
-      console.log("last");
     }
     verifyToken();
   }, [mail]);
@@ -47,7 +45,8 @@ const Welcome = () => {
     <div className="container d-flex align-items-center justify-content-center vh-100">
       {isLoading === true && <Spinner />}
       {
-        (isTokenValid === false) && <>
+        (isTokenValid === false) &&
+        <>
           <div className='container d-flex align-items-center justify-content-end vh-100'>
             <Signin classNameTopDiv="me-3 p-mid-0 w-25" />
             <Signup
