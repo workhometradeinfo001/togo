@@ -38,7 +38,7 @@ const Signin = (props: any) => {
         } catch {
             toast.error("Try after later...");
         }
-    }
+    };
     const oauthLoging = (e: React.MouseEvent, whichCaller: string) => {
         e.preventDefault();
         e.stopPropagation();
@@ -58,18 +58,19 @@ const Signin = (props: any) => {
             default:
                 break;
         }
-    }
+    };
     const loginObj = {
         email: inputFiled.email,
         password: inputFiled.password
-    }
+    };
     const afterSuccessfulLogin = async () => {
         await fetch(`${import.meta.env.VITE_CLOUD_AUTH_HOST}/jwt/token?email=${mail}`);
-    }
+    };
     useEffect(() => {
         const processOauthCallBack = async () => {
             if (searchParam.get("auth") === "callback") {
-                const data = await handleGetMethAuth(localStorage.getItem("oauth_endpoint"),
+                const data = await handleGetMethAuth(
+                    localStorage.getItem("oauth_endpoint"),
                     "Login Succesful", "Login Failed"
                 );
                 mail && localStorage.removeItem("email");
@@ -156,7 +157,7 @@ const Signin = (props: any) => {
                 <Paragraph
                     className="mt-4 text-secondary fs-6"
                     text="Forgot password: " />
-                {<Link to={"/forgetpassword"} onClick={()=> {start(), complete()}} className='mt-4 ms-2'>Click here</Link>}
+                {<Link to={"/forgetpassword"} onClick={() => { start(), complete() }} className='mt-4 ms-2'>Click here</Link>}
             </div>
 
         </div>
