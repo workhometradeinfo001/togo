@@ -21,7 +21,6 @@ const Welcome = () => {
   }, []);
   useEffect(() => {
     setIsLoading(true);
-    console.log("ooo" + mail)
     const verifyToken = async () => {
       const res = await fetch(`${auth_host}/gToken/verification`, {
         method: "POST",
