@@ -14,6 +14,7 @@ const Signin = (props: any) => {
     const [searchParam] = useSearchParams();
     const [inputFiled, setInputFiled] = useState({ email: "", password: "" });
     const [checkPointState, setCheckPointState] = useState(false);
+    const dashboard = import.meta.env.VITE_CLOUD_DASHBOARD;
     const [mail, setMail] = useState<String | null>(null);
     const { start, complete } = useLoadingBar({
         color: "red",
@@ -42,6 +43,7 @@ const Signin = (props: any) => {
     const oauthLoging = (e: React.MouseEvent, whichCaller: string) => {
         e.preventDefault();
         e.stopPropagation();
+        localStorage.removeItem("oauth_endpoint");
         switch (whichCaller) {
             case "google":
                 localStorage.setItem("oauth_endpoint", "oauth/token");
@@ -67,17 +69,20 @@ const Signin = (props: any) => {
         await fetch(`${import.meta.env.VITE_CLOUD_AUTH_HOST}/jwt/token?email=${mail}`);
     };
     useEffect(() => {
+        start();
+        mail && localStorage.removeItem("email");
         const processOauthCallBack = async () => {
             if (searchParam.get("auth") === "callback") {
                 const data = await handleGetMethAuth(
                     localStorage.getItem("oauth_endpoint"),
                     "Login Succesful", "Login Failed"
                 );
-                mail && localStorage.removeItem("email");
                 localStorage.setItem("email", data);
+                console.log(data);
             }
         }
         processOauthCallBack();
+        complete();
     }, [searchParam]);
     useEffect(() => {
         const mailStore = localStorage.getItem("email");

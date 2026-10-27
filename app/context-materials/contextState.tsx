@@ -47,7 +47,8 @@ const ContextState = ({ children }: any) => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(obj)
+                body: JSON.stringify(obj),
+                credentials: "include"
             });
             if (res.ok || res.status === 302 || res.status === 202) {
                 toast.success(toastMsgSuc);
@@ -111,6 +112,7 @@ const ContextState = ({ children }: any) => {
 
         const data = await res.text();
         toast.success(msgForSuccess);
+        console.log(data);
         return data;
     }
     return (
