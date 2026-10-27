@@ -109,10 +109,8 @@ const ContextState = ({ children }: any) => {
             toast.error(msgForFailed);
             return null;
         }
-
         const data = await res.text();
         toast.success(msgForSuccess);
-        console.log(data);
         return data;
     }
     return (

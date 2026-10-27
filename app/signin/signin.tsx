@@ -14,7 +14,6 @@ const Signin = (props: any) => {
     const [searchParam] = useSearchParams();
     const [inputFiled, setInputFiled] = useState({ email: "", password: "" });
     const [checkPointState, setCheckPointState] = useState(false);
-    const dashboard = import.meta.env.VITE_CLOUD_DASHBOARD;
     const [mail, setMail] = useState<String | null>(null);
     const { start, complete } = useLoadingBar({
         color: "red",
@@ -69,20 +68,35 @@ const Signin = (props: any) => {
         await fetch(`${import.meta.env.VITE_CLOUD_AUTH_HOST}/jwt/token?email=${mail}`);
     };
     useEffect(() => {
-        start();
-        mail && localStorage.removeItem("email");
-        const processOauthCallBack = async () => {
-            if (searchParam.get("auth") === "callback") {
+       const processOauthCallBack = async () => {
+        // 1. Check search params first before modifying storage
+        if (searchParam.get("auth") === "callback") {
+            const endpoint = localStorage.getItem("oauth_endpoint");
+            if (!endpoint) {
+                console.error("oauth_endpoint is missing from localStorage!");
+                return;
+            }
+            start(); // Start progress bar before async work
+            try {
                 const data = await handleGetMethAuth(
-                    localStorage.getItem("oauth_endpoint"),
-                    "Login Succesful", "Login Failed"
+                    endpoint,
+                    "Login Successful", 
+                    "Login Failed"
                 );
-                localStorage.setItem("email", data);
-                console.log(data);
+                if (data) {
+                    // Clear old email only after new email data is successfully fetched
+                    localStorage.removeItem("email");
+                    localStorage.setItem("email", data);
+                }
+            } catch (error) {
+                console.error("OAuth callback processing failed:", error);
+            } finally {
+                complete(); // Always complete progress bar when finished
             }
         }
-        processOauthCallBack();
-        complete();
+    };
+
+    processOauthCallBack();
     }, [searchParam]);
     useEffect(() => {
         const mailStore = localStorage.getItem("email");
