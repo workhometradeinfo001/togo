@@ -14,6 +14,7 @@ const Signin = (props: any) => {
     const [searchParam] = useSearchParams();
     const [inputFiled, setInputFiled] = useState({ email: "", password: "" });
     const [checkPointState, setCheckPointState] = useState(false);
+    const dashboard = import.meta.env.VITE_CLOUD_DASHBOARD;
     const [mail, setMail] = useState<String | null>(null);
     const { start, complete } = useLoadingBar({
         color: "red",
@@ -87,6 +88,7 @@ const Signin = (props: any) => {
                     // Clear old email only after new email data is successfully fetched
                     localStorage.removeItem("email");
                     localStorage.setItem("email", data);
+                    window.location.href = dashboard;
                 }
             } catch (error) {
                 console.error("OAuth callback processing failed:", error);
