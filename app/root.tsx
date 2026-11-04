@@ -44,6 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <link rel="icon" type="image/x-icon" href="/favicon_update.ico" />
         <script src="https://kit.fontawesome.com/18769700a4.js" crossOrigin="anonymous"></script>
       </head>
       <body>
@@ -69,11 +70,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return( 
-   <ContextState>
+  return (
+    <ContextState>
       <LoadingBarContainer> <Outlet /> </LoadingBarContainer>
     </ContextState>
-)}
+  )
+}
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
