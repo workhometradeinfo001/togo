@@ -13,7 +13,7 @@ const Welcome = () => {
   const [searchParam] = useSearchParams();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const auth_host = import.meta.env.VITE_CLOUD_AUTH_HOST;
-  const dashboard = import.meta.env.VITE_LOCAL_DASHBOARD;
+  const dashboard = import.meta.env.VITE_CLOUD_DASHBOARD;
 
   // Step 1: Grab email from localStorage on mount
   useEffect(() => {

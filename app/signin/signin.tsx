@@ -14,7 +14,7 @@ const Signin = (props: any) => {
     const [searchParam] = useSearchParams();
     const [inputFiled, setInputFiled] = useState({ email: "", password: "" });
     const [checkPointState, setCheckPointState] = useState(false);
-    const dashboard = import.meta.env.VITE_LOCAL_DASHBOARD;
+    const dashboard = import.meta.env.VITE_CLOUD_DASHBOARD;
     const [mail, setMail] = useState<String | null>(null);
     const { start, complete } = useLoadingBar({
         color: "red",
