@@ -1,17 +1,19 @@
 
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useEffectEvent, useState } from "react"
 import Signin from "~/signin/signin"
 import Signup from "~/signup/signup"
 import Spinner from "~/raw-components/spinner"
 import TogoContext from "~/context-materials/togoContext"
+import { useSearchParams } from "react-router"
 
 const Welcome = () => {
   const { } = useContext(TogoContext);
   const [mail, setMail] = useState<String | null>(null);
   const [isTokenValid, setIsTokenValid] = useState<Boolean>(true);
+  const [searchParam] = useSearchParams();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const auth_host = import.meta.env.VITE_CLOUD_AUTH_HOST;
-  const dashboard = import.meta.env.VITE_CLOUD_DASHBOARD;
+  const dashboard = import.meta.env.VITE_LOCAL_DASHBOARD;
 
   // Step 1: Grab email from localStorage on mount
   useEffect(() => {
@@ -54,6 +56,11 @@ const Welcome = () => {
     };
     verifyToken();
   }, [mail, auth_host, dashboard]);
+  useEffect(()=> {
+    if(searchParam.get("auth")=== "logout"){
+      localStorage.removeItem("email");
+    }
+  }, [searchParam])
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
       {/* Show Spinner while loading */}
@@ -61,7 +68,7 @@ const Welcome = () => {
 
       {/* Show Signin/Signup ONLY when loading is finished AND token is invalid */}
       {!isLoading && !isTokenValid && (
-        <div className='container d-flex align-items-center justify-content-end vh-100'>
+        <div className='w-100 d-flex align-items-center justify-content-end'>
           <Signin classNameTopDiv="me-3 p-mid-0 w-25" />
           <Signup
             classNameTopDiv="ps-2 p-mid-0 ms-3 border-start border-green w-50"
