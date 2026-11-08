@@ -15,25 +15,30 @@ const Welcome = () => {
   const auth_host = import.meta.env.VITE_CLOUD_AUTH_HOST;
   const dashboard = import.meta.env.VITE_CLOUD_DASHBOARD;
 
-  // Step 1: Grab email from localStorage on mount
+// Step 1: Handle logout parameter FIRST before checking localStorage
   useEffect(() => {
+    if (searchParam.get("auth") === "logout") {
+      localStorage.removeItem("email");
+      sessionStorage.clear();
+      setMail(null);
+      setIsTokenValid(false);
+      setIsLoading(false); // Stop loading immediately so login form shows
+      return;
+    }
+
+    // Step 2: Grab email from localStorage only if NOT logging out
     const email = localStorage.getItem("email");
     if (email) {
       setMail(email);
     } else {
-      // If there's no email stored, stop loading immediately and show login
       setIsLoading(false);
       setIsTokenValid(false);
     }
-  }, []);
-  useEffect(()=> {
-    if(searchParam.get("auth")=== "logout"){
-      localStorage.removeItem("email");
-    }
   }, [searchParam]);
-  // Step 2: Verify token only when mail changes and is present
+// Step 3: Verify token only when mail is present and we are not logging out
   useEffect(() => {
-    if (!mail) return;
+    if (!mail || searchParam.get("auth") === "logout") return;
+
     const verifyToken = async () => {
       try {
         const res = await fetch(`${auth_host}/gToken/verification`, {
@@ -54,12 +59,11 @@ const Welcome = () => {
         console.error("Verification error:", error);
         setIsTokenValid(false);
       } finally {
-        // 2. Only turn off loading *after* the async fetch completely finishes
         setIsLoading(false);
       }
     };
     verifyToken();
-  }, [mail, auth_host, dashboard]);
+  }, [mail, auth_host, dashboard, searchParam]);
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
       {/* Show Spinner while loading */}
