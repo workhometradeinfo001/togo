@@ -26,7 +26,11 @@ const Welcome = () => {
       setIsTokenValid(false);
     }
   }, []);
-
+  useEffect(()=> {
+    if(searchParam.get("auth")=== "logout"){
+      localStorage.removeItem("email");
+    }
+  }, [searchParam]);
   // Step 2: Verify token only when mail changes and is present
   useEffect(() => {
     if (!mail) return;
@@ -56,11 +60,6 @@ const Welcome = () => {
     };
     verifyToken();
   }, [mail, auth_host, dashboard]);
-  useEffect(()=> {
-    if(searchParam.get("auth")=== "logout"){
-      localStorage.removeItem("email");
-    }
-  }, [searchParam])
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
       {/* Show Spinner while loading */}
